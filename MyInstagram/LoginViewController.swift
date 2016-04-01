@@ -14,6 +14,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
+    static let userDidLogoutNotification = "UserDidLogout"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
