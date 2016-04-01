@@ -7,6 +7,7 @@ target 'MyInstagram' do
 	pod 'Parse'
     pod 'ParseUI'
     pod 'MBProgressHUD'
+    pod 'AFNetworking'
 end
 
 target 'MyInstagramTests' do

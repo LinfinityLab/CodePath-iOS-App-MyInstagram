@@ -8,6 +8,8 @@
 
 import UIKit
 import Parse
+import AFNetworking
+import MBProgressHUD
 
 class HomeViewController: UIViewController {
     
@@ -18,13 +20,51 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+        
+        requestPosts()
+        
         // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    internal class Reachability {
+        class func isConnectedToNetwork() -> Bool {
+            var zeroAddress = sockaddr_in()
+            zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+            zeroAddress.sin_family = sa_family_t(AF_INET)
+            let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+                SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+            }
+            var flags = SCNetworkReachabilityFlags()
+            if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+                return false
+            }
+            let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+            let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+            return (isReachable && !needsConnection)
+        }
+    }
+    
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        
+        if Reachability.isConnectedToNetwork() {
+            requestPosts()
+        } else {
+        }
+        //refreshControl.endRefreshing()
     }
     
 
@@ -47,7 +87,7 @@ class HomeViewController: UIViewController {
         query.limit = 20
         
         // fetch data asynchronously
-        if (!refreshControl.refreshing) {
+        if (refreshControl.refreshing) {
             refreshControl.beginRefreshing()
         }
         
@@ -55,6 +95,9 @@ class HomeViewController: UIViewController {
             if let posts = posts {
                 print("successed to fetch posts")
                 self.posts = posts
+                for i in posts {
+                    print (i)
+                }
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
                 
@@ -123,6 +166,7 @@ class HomeViewController: UIViewController {
 
 ////////// table \\\\\\\\\\
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let count  = self.posts?.count
@@ -134,6 +178,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell", forIndexPath: indexPath) as! PostCell
         
         let query = PFQuery(className: "Post")
@@ -149,8 +194,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 }
-
-
 
 
 extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

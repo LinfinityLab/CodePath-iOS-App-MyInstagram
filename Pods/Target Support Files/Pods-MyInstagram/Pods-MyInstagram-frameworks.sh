@@ -84,12 +84,14 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-MyInstagram/AFNetworking.framework"
   install_framework "Pods-MyInstagram/Bolts.framework"
   install_framework "Pods-MyInstagram/MBProgressHUD.framework"
   install_framework "Pods-MyInstagram/Parse.framework"
   install_framework "Pods-MyInstagram/ParseUI.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-MyInstagram/AFNetworking.framework"
   install_framework "Pods-MyInstagram/Bolts.framework"
   install_framework "Pods-MyInstagram/MBProgressHUD.framework"
   install_framework "Pods-MyInstagram/Parse.framework"
