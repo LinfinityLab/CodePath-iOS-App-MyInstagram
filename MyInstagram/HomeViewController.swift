@@ -24,12 +24,13 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        // Initialize a UIRefreshControl
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
-        requestPosts()
+        refreshControlAction(refreshControl)
         
         // Do any additional setup after loading the view.
     }
@@ -61,11 +62,22 @@ class HomeViewController: UIViewController {
     func refreshControlAction(refreshControl: UIRefreshControl) {
         
         if Reachability.isConnectedToNetwork() {
+            dismissNetworkErr()
             requestPosts()
         } else {
+            showNetworkErr()
         }
-        //refreshControl.endRefreshing()
+        refreshControl.endRefreshing()
     }
+    
+    func showNetworkErr(){
+        navigationItem.title = "Disconnected"
+    }
+    func dismissNetworkErr(){
+        navigationItem.title = "Linfinity Instagram"
+    }
+    
+    
     
 
     func resize(image: UIImage, newSize: CGSize) -> UIImage {
@@ -179,7 +191,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("PostCell", forIndexPath: indexPath) as! PostCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("PostCell", forIndexPath: indexPath) as! PostTableViewCell
         
         let query = PFQuery(className: "Post")
         query.orderByDescending("createdAt")

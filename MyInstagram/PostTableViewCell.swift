@@ -1,5 +1,5 @@
 //
-//  PostCell.swift
+//  PostTableViewCell.swift
 //  MyInstagram
 //
 //  Created by Weifan Lin on 4/1/16.
@@ -9,9 +9,11 @@
 import UIKit
 import ParseUI
 
-class PostCell: UITableViewCell {
-    
+class PostTableViewCell: UITableViewCell {
+
     @IBOutlet weak var usernameLabel: UILabel!
+
+
     @IBOutlet weak var photoView: PFImageView!
     @IBOutlet weak var captionLabel: UILabel!
     
@@ -29,9 +31,9 @@ class PostCell: UITableViewCell {
         }
     }
     
-
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
     }
 
