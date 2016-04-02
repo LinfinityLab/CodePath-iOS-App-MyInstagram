@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var usernameField: UITextField!
@@ -20,6 +20,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        usernameField.delegate = self
+        passwordField.delegate = self
+        
         messageLabel.alpha = 0
         // Do any additional setup after loading the view.
     }
@@ -29,9 +32,14 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func onTap(sender: AnyObject) {
+        usernameField.endEditing(true)
+        passwordField.endEditing(true)
+    }
 
     
     @IBAction func onLogin(sender: AnyObject) {
+            
         PFUser.logInWithUsernameInBackground(usernameField.text!, password: passwordField.text!) { (user: PFUser?, error: NSError?) -> Void in
             if user != nil {
                 print("login good")
@@ -42,26 +50,35 @@ class LoginViewController: UIViewController {
                 print(error?.localizedDescription)
             }
         }
+    
+
     }
     @IBAction func onSignUp(sender: AnyObject) {
         
-        let newUser = PFUser()
         
-        newUser.username = usernameField.text
-        newUser.password = passwordField.text
         
-        newUser.signUpInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
-            if success {
-                print("singup good")
-                self.performSegueWithIdentifier("LoginSegue", sender: nil)
-            } else {
-                print(error?.localizedDescription)
-                self.messageLabel.text = "\((error?.localizedDescription)!)"
-                self.animateText(self.messageLabel)
-                if error?.code == 202 {
-                    print("user name is taken")
+        if usernameField.text != "" && passwordField.text != "" {
+            
+            let newUser = PFUser()
+            newUser.username = usernameField.text
+            newUser.password = passwordField.text
+            
+            newUser.signUpInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+                if success {
+                    print("singup good")
+                    self.performSegueWithIdentifier("LoginSegue", sender: nil)
+                } else {
+                    print(error?.localizedDescription)
+                    self.messageLabel.text = "\((error?.localizedDescription)!)"
+                    self.animateText(self.messageLabel)
+                    if error?.code == 202 {
+                        print("user name is taken")
+                    }
                 }
             }
+        } else {
+            self.messageLabel.text = "Both fields are required"
+            self.animateText(self.messageLabel)
         }
     }
     

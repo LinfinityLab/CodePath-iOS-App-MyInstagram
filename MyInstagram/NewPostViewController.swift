@@ -33,7 +33,21 @@ class NewPostViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func resize(image: UIImage, newSize: CGSize) -> UIImage {
+        let resizeImageView = UIImageView(frame: CGRectMake(0, 0, newSize.width, newSize.height))
+        resizeImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        resizeImageView.image = image
+        
+        UIGraphicsBeginImageContext(resizeImageView.frame.size)
+        resizeImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
+    
     @IBAction func onPost(sender: AnyObject) {
+//        Post.postUserImage(resize(editedPhoto, newSize: CGSize(width: 100, height: 100)), withCaption: captionTextField.text!) { (success: Bool, error: NSError?) -> Void in
         Post.postUserImage(editedPhoto, withCaption: captionTextField.text!) { (success: Bool, error: NSError?) -> Void in
             if success {
                 print("Posted")
