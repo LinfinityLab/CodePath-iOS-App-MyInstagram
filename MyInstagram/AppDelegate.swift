@@ -28,18 +28,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         )
         
-//        if PFUser.currentUser() != nil {
-//            // if there is a logged in user then load the home view controller
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let vc = storyboard.instantiateViewControllerWithIdentifier("TabBarController")
-//            window?.rootViewController = vc
-//        }
-//        
-//        NSNotificationCenter.defaultCenter().addObserverForName(LoginViewController.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let vc = storyboard.instantiateInitialViewController()
-//            self.window?.rootViewController = vc
-//        }
+        if PFUser.currentUser() != nil {
+            // if there is a logged in user then load the home view controller
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewControllerWithIdentifier("HomeTabBarController")
+            window?.rootViewController = vc
+        }
+
+        NSNotificationCenter.defaultCenter().addObserverForName(LoginViewController.userDidLogoutNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateInitialViewController()
+            self.window?.rootViewController = vc
+        }
         
         // Override point for customization after application launch.
         return true

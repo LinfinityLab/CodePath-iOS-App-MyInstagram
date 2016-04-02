@@ -11,6 +11,7 @@ import Parse
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
@@ -18,7 +19,8 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        messageLabel.alpha = 0
         // Do any additional setup after loading the view.
     }
 
@@ -35,6 +37,8 @@ class LoginViewController: UIViewController {
                 print("login good")
                 self.performSegueWithIdentifier("LoginSegue", sender: nil)
             } else {
+                self.messageLabel.text = "\((error?.localizedDescription)!)"
+                self.animateText(self.messageLabel)
                 print(error?.localizedDescription)
             }
         }
@@ -52,12 +56,29 @@ class LoginViewController: UIViewController {
                 self.performSegueWithIdentifier("LoginSegue", sender: nil)
             } else {
                 print(error?.localizedDescription)
+                self.messageLabel.text = "\((error?.localizedDescription)!)"
+                self.animateText(self.messageLabel)
                 if error?.code == 202 {
                     print("user name is taken")
                 }
             }
         }
     }
+    
+    
+    func animateText(label : UILabel){
+        UIView.animateWithDuration(1.0, animations: {
+            label.alpha = 1.0
+            }, completion: {
+                (completed : Bool) -> Void in
+                UIView.animateWithDuration(1.0, delay: 2.0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                    label.alpha = 0
+                    }, completion: {(completed : Bool) -> Void in
+                        completed
+                })
+        })
+    }
+    
     /*
     // MARK: - Navigation
 

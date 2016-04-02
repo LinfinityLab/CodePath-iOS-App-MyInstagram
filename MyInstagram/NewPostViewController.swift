@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewPostViewController: UIViewController {
+class NewPostViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var postPhoto: UIImageView!
     @IBOutlet weak var captionTextField: UITextField!
@@ -18,8 +18,13 @@ class NewPostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        captionTextField.delegate = self
 
         postPhoto.image = photo
+        
+        captionTextField.text = "Say something about your photo :)"
+        
         // Do any additional setup after loading the view.
     }
 
@@ -40,6 +45,28 @@ class NewPostViewController: UIViewController {
     @IBAction func onCancel(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        if (self.captionTextField.text == "Say something about your photo :)") {
+            self.captionTextField.text = ""
+        }
+    }
+
+    @IBAction func onTap(sender: AnyObject) {
+        self.captionTextField.endEditing(true)
+    }
+    
+    
+//    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+//        
+//        let currentCharacterCount = textField.text?.characters.count ?? 0
+//        if (range.length + range.location > currentCharacterCount){
+//            return false
+//        }
+//        let newLength = currentCharacterCount + string.characters.count - range.length
+//        return newLength <= 25
+//    }
+    
     /*
     // MARK: - Navigation
 

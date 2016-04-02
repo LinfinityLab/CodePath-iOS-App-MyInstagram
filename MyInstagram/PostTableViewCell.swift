@@ -21,22 +21,28 @@ class PostTableViewCell: UITableViewCell {
         didSet {
             let user = post["author"] as? PFUser
             self.usernameLabel.text = user?.username
-            usernameLabel.sizeToFit()
+//            usernameLabel.sizeToFit()
             
             self.photoView.file = post["media"] as? PFFile
             self.photoView.loadInBackground()
             
             self.captionLabel.text = post["caption"] as? String
-            captionLabel.sizeToFit()
+//            captionLabel.sizeToFit()
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        captionLabel.preferredMaxLayoutWidth =  captionLabel.frame.size.width
         // Initialization code
     }
-
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        captionLabel.preferredMaxLayoutWidth =  captionLabel.frame.size.width
+        
+    }
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(false, animated: animated)
 

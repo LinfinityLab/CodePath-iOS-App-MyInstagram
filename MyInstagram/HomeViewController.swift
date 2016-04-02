@@ -24,6 +24,9 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 120
+        
         // Initialize a UIRefreshControl
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
@@ -40,6 +43,9 @@ class HomeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidAppear(animated: Bool) {
+        refreshControlAction(refreshControl)
+    }
     
     internal class Reachability {
         class func isConnectedToNetwork() -> Bool {
